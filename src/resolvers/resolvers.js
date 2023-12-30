@@ -1,4 +1,4 @@
-const task = require('../../models/task');
+const Task = require('../../models/task');
 
 
 const resolvers = {
@@ -6,7 +6,7 @@ const resolvers = {
         hello: () => 'Hello',
         getAllTasks: async () => {
             try {
-                const allTasks = await task.find();
+                const allTasks = await Task.find();
                 console.log('allTasks: ',allTasks);
             } catch (error) {
                 throw new Error('There was an error getting all tasks : ', error);
@@ -15,16 +15,27 @@ const resolvers = {
     },
 
     Mutation: {
-        createTask: async({ title, description }) => {
+        createTask: async(parent, args) => {
 
+            const {title, description} = args;
+            
             try {
-                const newTask = new task({title, description});
+                const newTask = new Task({title, description});
                 const taskSaved = await newTask.save();
-                console.log('taskSaved: ', taskSaved);
                 return taskSaved;
             } catch (error) {
                 throw new Error('There was an error saving the task: ', error);
             }
+            
+        },
+        updateTask: async(parent,args) => {
+
+            const { id, title, description } = args;
+
+            const taskUpdated = await Task.findByIdAndUpdate(id, {title, description});
+            console.log('taskUpdated: ', taskUpdated);
+
+            return taskUpdated;
             
         }
     }
