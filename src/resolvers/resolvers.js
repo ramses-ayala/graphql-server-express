@@ -15,7 +15,7 @@ const resolvers = {
     },
 
     Mutation: {
-        createTask: async(parent, args) => {
+        createTask: async(_, args) => {
 
             const {title, description} = args;
             
@@ -28,7 +28,8 @@ const resolvers = {
             }
             
         },
-        updateTask: async(parent,args) => {
+
+        updateTask: async(_,args) => {
 
             const { id, title, description } = args;
 
@@ -37,7 +38,20 @@ const resolvers = {
 
             return taskUpdated;
             
-        }
+        },
+
+        deleteTask: async(_, args) => {
+
+            const { id } = args;
+
+            const taskDeleted = await Task.findByIdAndDelete(id);
+
+            if(!taskDeleted) throw new Error("This task doesn't exist !!! ");
+
+            return taskDeleted;
+        },
+
+        
     }
 };
 
