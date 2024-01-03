@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 
@@ -29,8 +31,8 @@ const serverGraphqlInit = async(typeDefs, resolvers) => {
     
     server.applyMiddleware({ app });
     
-    app.listen(app.get('port'), () => {
-        console.log(`Server on port ${app.get('port')}`);
+    app.listen(process.env.PORT, () => {
+        console.log(`Server on port ${process.env.PORT}`);
     });
 }
 

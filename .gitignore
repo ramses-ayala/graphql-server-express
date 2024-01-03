@@ -1,1 +1,5 @@
+.env
 node_modules
+
+# this graphql was developed based on this video: https://www.youtube.com/watch?v=fIZxZk_szWw&t=3073s
+# I skipped the section about uploading to production

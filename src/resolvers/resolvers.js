@@ -7,20 +7,29 @@ const resolvers = {
         getAllTasks: async () => {
             try {
                 const allTasks = await Task.find();
-                console.log('allTasks: ',allTasks);
+                return allTasks;
             } catch (error) {
                 throw new Error('There was an error getting all tasks : ', error);
             }
-        }
+        },
+
+        getTask: async(_,args) => {
+
+            const { id } = args;
+
+            const taskFound = await Task.findById(id);
+
+            return taskFound;
+        },
+       
     },
 
     Mutation: {
-        createTask: async(_, args) => {
 
-            const {title, description} = args;
-            
+        createTask: async(_, {task}) => {
+
             try {
-                const newTask = new Task({title, description});
+                const newTask = new Task({task});
                 const taskSaved = await newTask.save();
                 return taskSaved;
             } catch (error) {
@@ -29,13 +38,9 @@ const resolvers = {
             
         },
 
-        updateTask: async(_,args) => {
+        updateTask: async(_,{id,task}) => {
 
-            const { id, title, description } = args;
-
-            const taskUpdated = await Task.findByIdAndUpdate(id, {title, description});
-            console.log('taskUpdated: ', taskUpdated);
-
+            const taskUpdated = await Task.findByIdAndUpdate(id, {$set: task}, {new: true});
             return taskUpdated;
             
         },
@@ -46,9 +51,9 @@ const resolvers = {
 
             const taskDeleted = await Task.findByIdAndDelete(id);
 
-            if(!taskDeleted) throw new Error("This task doesn't exist !!! ");
+            if(taskDeleted !== null) return `Task deleted successfully !!!`;
 
-            return taskDeleted;
+            return `Task not found !!!`;
         },
 
         
